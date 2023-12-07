@@ -15,12 +15,12 @@ import javax.persistence.*;
 public class Profile {
 
     @Id
-    @Column(name = "user_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-//    @JoinColumn(name = "user_id")
-    @PrimaryKeyJoinColumn(name = "user_id")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+//    @PrimaryKeyJoinColumn(name = "user_id")
     private User user;
 
     private String street;
@@ -28,8 +28,7 @@ public class Profile {
     private String language;
 
     public void setUser(User user) {
-        user.setProfile(this);
+        user.setProfile(this );
         this.user = user;
-        this.id = user.getId();
     }
 }

@@ -1,7 +1,7 @@
 package kz.baltabayev;
 
+import kz.baltabayev.entity.Chat;
 import kz.baltabayev.entity.Company;
-import kz.baltabayev.entity.Profile;
 import kz.baltabayev.entity.User;
 import kz.baltabayev.util.HibernateUtil;
 import lombok.Cleanup;
@@ -25,25 +25,49 @@ import static java.util.stream.Collectors.joining;
 class HibernateRunnerTest {
 
     @Test
+    void checkManyToMany() {
+        try (var sessionFactory = HibernateUtil.buildSessionFactory();
+             var session = sessionFactory.openSession()) {
+            session.beginTransaction();
+
+            User user = User.builder()
+                    .username("qaisar_test")
+                    .build();
+
+            Chat chat = Chat.builder()
+                    .name("qaisar")
+                    .build();
+
+            user.addChat(chat);
+            session.save(chat);
+
+//            user.getChats().clear();
+
+
+            session.getTransaction().commit();
+        }
+    }
+
+
+    @Test
     void checkOneToOne() {
         try (var sessionFactory = HibernateUtil.buildSessionFactory();
              var session = sessionFactory.openSession()) {
             session.beginTransaction();
 
-//            User user = session.get(User.class, 1);
-//            System.out.println();
+            User user = session.get(User.class, 4);
+            System.out.println();
 
-            User user = User.builder()
-                    .username("qaisar004")
-                    .build();
-            Profile userProfile = Profile.builder()
-                    .language("kz")
-                    .street("Lenina 18")
-                    .build();
-
-            session.save(user);
-            userProfile.setUser(user);
-            session.save(userProfile);
+//            User user = User.builder()
+//                    .username("qaisar_test 004")
+//                    .build();
+//            Profile userProfile = Profile.builder()
+//                    .language("kz")
+//                    .street("Lenina 18")
+//                    .build();
+//            userProfile.setUser(user);
+//
+//            session.save(user);
 
             session.getTransaction().commit();
         }

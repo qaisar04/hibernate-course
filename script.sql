@@ -11,6 +11,29 @@ CREATE TABLE users -- [base]
 --     company_id INT REFERENCES company (id) ON DELETE CASCADE
 );
 
+CREATE TABLE profile -- [base]
+(
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT NOT NULL UNIQUE REFERENCES users (id),
+    street VARCHAR(128),
+    language CHAR(2)
+);
+
+CREATE TABLE chat
+(
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(64) NOT NULL UNIQUE
+);
+
+CREATE TABLE users_chat
+(
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT REFERENCES users (id),
+    chat_id BIGINT REFERENCES chat (id),
+    created_at TIMESTAMP NOT NULL,
+    created_by VARCHAR(128) NOT NULL
+);
+
 CREATE TABLE company
 (
     id SERIAL PRIMARY KEY,
@@ -41,3 +64,5 @@ CREATE SEQUENCE users_id_seq
 owned by users.id;
 
 DROP TABLE users;
+DROP TABLE profile;
+DROP TABLE users_chat;
