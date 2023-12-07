@@ -12,7 +12,7 @@ public class HibernateUtil {
 
     public static SessionFactory buildSessionFactory() {
         Configuration configuration = new Configuration();
-        configuration.addAnnotatedClass(User.class); // либо в xml файле
+//        configuration.addAnnotatedClass(User.class); // либо в xml файле
 //        configuration.addAttributeConverter(new BirthdayConverter(), true);
         configuration.addAttributeConverter(new BirthdayConverter());
         configuration.registerTypeOverride(new JsonBinaryType());

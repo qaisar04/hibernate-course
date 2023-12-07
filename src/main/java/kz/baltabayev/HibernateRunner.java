@@ -1,9 +1,6 @@
 package kz.baltabayev;
 
-import kz.baltabayev.entity.Birthday;
-import kz.baltabayev.entity.PersonalInfo;
-import kz.baltabayev.entity.Role;
-import kz.baltabayev.entity.User;
+import kz.baltabayev.entity.*;
 import kz.baltabayev.util.HibernateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
@@ -27,27 +24,55 @@ public class HibernateRunner {
 //        Connection connection = DriverManager
 //                .getConnection("db.url", "db.username", "db.password");
 
-        try (SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
-             Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
-            User user = User.builder()
-                    .username("qaisar04")
-                    .personalInfo(PersonalInfo.builder()
-                            .firstname("qaisar")
-                            .lastname("java")
-                            .birthDate(new Birthday(LocalDate.of(2004, 11, 29)))
-                            .build())
-                    .role(Role.USER)
-                    .info("""
+        User user = User.builder()
+                .username("qaisar04")
+                .personalInfo(PersonalInfo.builder()
+                        .firstname("qaisar")
+                        .lastname("java")
+                        .birthDate(new Birthday(LocalDate.of(2004, 11, 29)))
+                        .build())
+                .role(Role.USER)
+                .info("""
                             {
                                 "name":"Qaisar",
                                 "id":25
                             }
                             """)
-                    .build();
+                .build();
 
-            session.save(user);
-            log.info("SAVE METHOD!");
+        Company company1 = Company.builder()
+                .name("Google")
+                .build();
+
+        User user1 = User.builder()
+                .username("spring04")
+                .personalInfo(PersonalInfo.builder()
+                        .firstname("qaisar")
+                        .lastname("java")
+                        .birthDate(new Birthday(LocalDate.of(2004, 11, 29)))
+                        .build())
+                .role(Role.USER)
+                .company(company1)
+                .info("""
+                            {
+                                "location":"Pavlodar",
+                                "code":14
+                            }
+                            """)
+                .build();
+
+        try (SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
+             Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+
+
+//            session.save(company1);
+//            session.save(user1);
+
+            User user2 = session.get(User.class, 1L);
+            System.out.println();
+
+            log.info("RUN METHOD!");
 
             try(Session session_2 = sessionFactory.openSession()) {
                 PersonalInfo key = PersonalInfo.builder()
@@ -57,7 +82,6 @@ public class HibernateRunner {
                         .build();
 
                 User retrievedUser = session_2.get(User.class, key);
-                System.out.println(retrievedUser);
             }
 
 //          --- [Cache] ---
