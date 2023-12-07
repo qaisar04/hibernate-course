@@ -11,8 +11,8 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@EqualsAndHashCode
-@ToString(exclude = "company")
+@EqualsAndHashCode(of = "username")
+@ToString(exclude = {"company", "profile"})
 @Entity
 @TypeDef(name = "qaisar", typeClass = JsonBinaryType.class)
 @Table(name = "users", schema = "public")
@@ -42,9 +42,13 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+//    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id") // названия нашей колонки в таблице 'users'
     private Company company;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Profile profile;
 }
 
 // POJO - Plain Old Java Object

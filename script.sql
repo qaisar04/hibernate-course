@@ -8,12 +8,20 @@ CREATE TABLE users -- [base]
     role VARCHAR(32),
     info JSONB,
     company_id INT REFERENCES company (id)
+--     company_id INT REFERENCES company (id) ON DELETE CASCADE
 );
 
 CREATE TABLE company
 (
     id SERIAL PRIMARY KEY,
     name VARCHAR(64) NOT NULL UNIQUE
+);
+
+CREATE TABLE profile
+(
+    user_id BIGINT PRIMARY KEY REFERENCES users (id),
+    street VARCHAR(128),
+    language CHAR(2)
 );
 
 CREATE TABLE users

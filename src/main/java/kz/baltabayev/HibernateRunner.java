@@ -77,7 +77,7 @@ public class HibernateRunner {
             try(Session session_2 = sessionFactory.openSession()) {
                 PersonalInfo key = PersonalInfo.builder()
                         .firstname("qaisar")
-                        .lastname("java")
+                         .lastname("java")
                         .birthDate(new Birthday(LocalDate.of(2004, 11, 29)))
                         .build();
 

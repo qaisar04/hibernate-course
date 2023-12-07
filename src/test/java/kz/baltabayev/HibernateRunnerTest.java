@@ -1,13 +1,10 @@
 package kz.baltabayev;
 
-import kz.baltabayev.entity.Birthday;
 import kz.baltabayev.entity.Company;
+import kz.baltabayev.entity.Profile;
 import kz.baltabayev.entity.User;
 import kz.baltabayev.util.HibernateUtil;
 import lombok.Cleanup;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.junit.jupiter.api.Test;
 
 import javax.persistence.Column;
@@ -19,13 +16,105 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.List;
 
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.joining;
 
 class HibernateRunnerTest {
+
+    @Test
+    void checkOneToOne() {
+        try (var sessionFactory = HibernateUtil.buildSessionFactory();
+             var session = sessionFactory.openSession()) {
+            session.beginTransaction();
+
+//            User user = session.get(User.class, 1);
+//            System.out.println();
+
+            User user = User.builder()
+                    .username("qaisar004")
+                    .build();
+            Profile userProfile = Profile.builder()
+                    .language("kz")
+                    .street("Lenina 18")
+                    .build();
+
+            session.save(user);
+            userProfile.setUser(user);
+            session.save(userProfile);
+
+            session.getTransaction().commit();
+        }
+    }
+
+    @Test
+    void checkOrphanRemoval() {
+        try (var sessionFactory = HibernateUtil.buildSessionFactory();
+             var session = sessionFactory.openSession()) {
+            session.beginTransaction();
+
+            Company company = session.get(Company.class, 1);
+            company.getUsers().removeIf(user -> user.getId().equals(2L));
+
+
+            session.getTransaction().commit();
+        }
+    }
+
+    @Test
+    void checkLazyInitialization() {
+        Company company = null;
+        try (var sessionFactory = HibernateUtil.buildSessionFactory();
+             var session = sessionFactory.openSession()) {
+            session.beginTransaction();
+
+            company = session.get(Company.class, 1);
+
+
+            session.getTransaction().commit();
+        }
+        List<User> users = company.getUsers();
+//        System.out.println(users.size()); // LazyInitializationException
+    }
+
+
+    @Test
+    void deleteCompany() {
+        @Cleanup var sessionFactory = HibernateUtil.buildSessionFactory();
+        @Cleanup var session = sessionFactory.openSession();
+        session.beginTransaction();
+
+        Company company = session.get(Company.class, 2);
+        session.delete(company);
+
+        session.getTransaction().commit();
+    }
+
+    @Test
+    void addUserToNewCompany() {
+        @Cleanup var sessionFactory = HibernateUtil.buildSessionFactory();
+        @Cleanup var session = sessionFactory.openSession();
+        session.beginTransaction();
+
+        Company company = Company.builder()
+                .name("Amazon")
+                .build();
+
+        User user = User.builder()
+                .username("Bob")
+                .build();
+
+//        user.setCompany(company);
+//        company.getUsers().add(user);
+
+        company.addUser(user);
+
+        session.save(company);
+
+        session.getTransaction().commit();
+    }
 
     @Test
     void oneToMany() {
@@ -34,7 +123,6 @@ class HibernateRunnerTest {
         session.beginTransaction();
 
         Company company = session.get(Company.class, 1);
-        System.out.println();
 
         session.getTransaction().commit();
     }
@@ -87,7 +175,7 @@ class HibernateRunnerTest {
 
         Connection connection = null;
         PreparedStatement preparedStatement = connection.prepareStatement(sql.formatted(tableName, columnNames, columnValues));
-        for(Field declaredField : declaredFields) {
+        for (Field declaredField : declaredFields) {
             preparedStatement.setObject(1, declaredField.get(user));
         }
 
