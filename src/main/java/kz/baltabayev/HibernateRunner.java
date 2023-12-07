@@ -1,14 +1,13 @@
 package kz.baltabayev;
 
 import kz.baltabayev.entity.Birthday;
+import kz.baltabayev.entity.PersonalInfo;
 import kz.baltabayev.entity.Role;
 import kz.baltabayev.entity.User;
 import kz.baltabayev.util.HibernateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -32,9 +31,12 @@ public class HibernateRunner {
              Session session = sessionFactory.openSession()) {
             session.beginTransaction();
             User user = User.builder()
-                    .username("qaisar9")
-                    .firstname("qaisar")
-                    .birthDate(new Birthday(LocalDate.of(2000, 11, 29)))
+                    .username("qaisar04")
+                    .personalInfo(PersonalInfo.builder()
+                            .firstname("qaisar")
+                            .lastname("java")
+                            .birthDate(new Birthday(LocalDate.of(2004, 11, 29)))
+                            .build())
                     .role(Role.USER)
                     .info("""
                             {
@@ -44,8 +46,19 @@ public class HibernateRunner {
                             """)
                     .build();
 
-            session.update(user);
-            log.info("UPDATE METHOD!");
+            session.save(user);
+            log.info("SAVE METHOD!");
+
+            try(Session session_2 = sessionFactory.openSession()) {
+                PersonalInfo key = PersonalInfo.builder()
+                        .firstname("qaisar")
+                        .lastname("java")
+                        .birthDate(new Birthday(LocalDate.of(2004, 11, 29)))
+                        .build();
+
+                User retrievedUser = session_2.get(User.class, key);
+                System.out.println(retrievedUser);
+            }
 
 //          --- [Cache] ---
 //          User user_1 = session.get(User.class, 1); // запрос в БД

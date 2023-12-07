@@ -1,7 +1,6 @@
 package kz.baltabayev.entity;
 
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
-import kz.baltabayev.converter.BirthdayConverter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +9,6 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -21,14 +19,20 @@ import java.time.LocalDate;
 @Table(name = "users", schema = "public")
 public class User {
 
-    @Id
-    private String username;
-    private String firstname;
-    private String lastname;
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "user_id_generator") // самый оптимальный вариант
+////  @GeneratedValue(strategy = GenerationType.SEQUENCE)
+////  @SequenceGenerator(name = "user_id_generator", sequenceName = "users_id_seq", allocationSize = 1)
+////  hibernate_sequence (default for 'name' @SequenceGenerator)
+//    private Long id;
 
-//    @Convert(converter = BirthdayConverter.class) // либо указываем при создании Configuration
-    @Column(name = "birth_date")
-    private Birthday birthDate;
+    @Id
+//  @Embedded (not necessary)
+    @AttributeOverride(name = "birthDate", column = @Column(name = "birth_date"))
+    private PersonalInfo personalInfo;
+
+    @Column(unique = true)
+    private String username;
 
     @Enumerated(EnumType.STRING)
     private Role role;
