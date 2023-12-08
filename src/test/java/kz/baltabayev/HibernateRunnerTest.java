@@ -37,7 +37,7 @@ class HibernateRunnerTest {
 //            company.getLocales().add(LocaleInfo.of("ru", "Описание на русском"));
 //            company.getLocales().add(LocaleInfo.of("en", "English description"));
 
-            company.getUsers().forEach(System.out::println);
+            company.getUsers().forEach((k, v) -> System.out.println(v));
 
 
             session.getTransaction().commit();
@@ -100,7 +100,7 @@ class HibernateRunnerTest {
             session.beginTransaction();
 
             Company company = session.get(Company.class, 1);
-            company.getUsers().removeIf(user -> user.getId().equals(2L));
+//            company.getUsers().removeIf(user -> user.getId().equals(2L));
 
 
             session.getTransaction().commit();
@@ -119,7 +119,7 @@ class HibernateRunnerTest {
 
             session.getTransaction().commit();
         }
-        Set<User> users = company.getUsers();
+//        Set<User> users = company.getUsers();
 //        System.out.println(users.size()); // LazyInitializationException
     }
 

@@ -27,22 +27,20 @@ public class Company {
     private String name;
 
     @Builder.Default
-//  @org.hibernate.annotations.OrderBy(clause = "username DESC, lastname ASC") // username и lastname поля наших таблиц
-//  @OrderBy("username DESC, personalInfo.lastname ASC") // поля класса User
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
-    @OrderColumn(name = "id") // только List и с типом Integer
-//    private List<User> users = new ArrayList<>(); // лучше использовать Set, если ordering нужен на уровне прилоежния
-    @SortNatural // in-memory Set/Map sorting
-//    private Set<User> users = new TreeSet<>();
-    private SortedSet<User> users = new TreeSet<>(); // PersistentSortedSet
+    @MapKey(name = "username")
+    @SortNatural
+    private Map<String, User> users = new HashMap<>(); // PersistentSortedSet
 
 
 
-    @ElementCollection
     @Builder.Default
+    @ElementCollection
     @CollectionTable(name = "company_locale", joinColumns = @JoinColumn(name = "company_id"))
 //    @AttributeOverride(name = "lang", column = @Column(name = "language"))
-    private List<LocaleInfo> locales = new ArrayList<>();
+//    private List<LocaleInfo> locales = new ArrayList<>();
+    @MapKeyColumn(name = "lang") // для указания ключа Map
+    private Map<String, String> locales = new HashMap<>(); // key - lang, val - desc
 
 
 //    @OneToMany(mappedBy = "company")
@@ -50,7 +48,7 @@ public class Company {
 //    private Set<User> users
 
     public void addUser(User user) {
-        users.add(user);
+        users.put(user.getUsername(), user);
         user.setCompany(this);
     }
 
