@@ -19,6 +19,14 @@ CREATE TABLE profile -- [base]
     language CHAR(2)
 );
 
+CREATE TABLE company_locale -- не состоятельная сущность
+(
+    company_id INT NOT NULL REFERENCES company (id),
+    lang CHAR(2) NOT NULL,
+    description VARCHAR(128) NOT NULL,
+    PRIMARY KEY (company_id, lang)
+);
+
 CREATE TABLE chat
 (
     id BIGSERIAL PRIMARY KEY,
@@ -31,7 +39,8 @@ CREATE TABLE users_chat
     user_id BIGINT REFERENCES users (id),
     chat_id BIGINT REFERENCES chat (id),
     created_at TIMESTAMP NOT NULL,
-    created_by VARCHAR(128) NOT NULL
+    created_by VARCHAR(128) NOT NULL,
+    UNIQUE (user_id, chat_id )
 );
 
 CREATE TABLE company

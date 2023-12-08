@@ -66,8 +66,8 @@ public class HibernateRunner {
             session.beginTransaction();
 
 
-//            session.save(company1);
-//            session.save(user1);
+//          session.save(company1);
+//          session.save(user1);
 
             User user2 = session.get(User.class, 1L);
             System.out.println();

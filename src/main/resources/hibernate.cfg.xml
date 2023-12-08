@@ -17,6 +17,8 @@
     <mapping class="kz.baltabayev.entity.Company"/>
     <mapping class="kz.baltabayev.entity.Profile"/>
     <mapping class="kz.baltabayev.entity.Chat"/>
+    <mapping class="kz.baltabayev.entity.UserChat"/>
+
 
     <!-- DB schema will be updated if needed -->
     <!-- <property name="hibernate.hbm2ddl.auto">update</property> -->

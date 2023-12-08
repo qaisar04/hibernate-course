@@ -3,6 +3,7 @@ package kz.baltabayev;
 import kz.baltabayev.entity.Chat;
 import kz.baltabayev.entity.Company;
 import kz.baltabayev.entity.User;
+import kz.baltabayev.entity.UserChat;
 import kz.baltabayev.util.HibernateUtil;
 import lombok.Cleanup;
 import org.junit.jupiter.api.Test;
@@ -16,8 +17,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.joining;
@@ -25,24 +28,41 @@ import static java.util.stream.Collectors.joining;
 class HibernateRunnerTest {
 
     @Test
+    void localeInfo() {
+        try (var sessionFactory = HibernateUtil.buildSessionFactory();
+             var session = sessionFactory.openSession()) {
+            session.beginTransaction();
+
+            Company company = session.get(Company.class, 1);
+//            company.getLocales().add(LocaleInfo.of("ru", "Описание на русском"));
+//            company.getLocales().add(LocaleInfo.of("en", "English description"));
+
+            company.getUsers().forEach(System.out::println);
+
+
+            session.getTransaction().commit();
+        }
+    }
+
+    @Test
     void checkManyToMany() {
         try (var sessionFactory = HibernateUtil.buildSessionFactory();
              var session = sessionFactory.openSession()) {
             session.beginTransaction();
 
-            User user = User.builder()
-                    .username("qaisar_test")
+            User user = session.get(User.class, 1L);
+            Chat chat = session.get(Chat.class, 1L);
+            UserChat userChat = UserChat.builder()
+                    .user(user)
+                    .chat(chat)
+                    .createdAt(Instant.now())
+                    .createdBy(user.getUsername())
                     .build();
 
-            Chat chat = Chat.builder()
-                    .name("qaisar")
-                    .build();
+            userChat.setUser(user);
+            userChat.setChat(chat);
 
-            user.addChat(chat);
-            session.save(chat);
-
-//            user.getChats().clear();
-
+            session.save(userChat);
 
             session.getTransaction().commit();
         }
@@ -99,7 +119,7 @@ class HibernateRunnerTest {
 
             session.getTransaction().commit();
         }
-        List<User> users = company.getUsers();
+        Set<User> users = company.getUsers();
 //        System.out.println(users.size()); // LazyInitializationException
     }
 
