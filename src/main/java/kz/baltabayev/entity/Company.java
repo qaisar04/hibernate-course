@@ -30,7 +30,7 @@ public class Company {
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKey(name = "username")
     @SortNatural
-    private Map<String, User> users = new HashMap<>(); // PersistentSortedSet
+    private SortedMap<String, User> users = new TreeMap<>(); // PersistentSortedSet
 
 
 

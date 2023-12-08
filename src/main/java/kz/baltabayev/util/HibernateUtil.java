@@ -11,13 +11,17 @@ import org.hibernate.cfg.Configuration;
 public class HibernateUtil {
 
     public static SessionFactory buildSessionFactory() {
+        Configuration configuration = buildConfiguration();
+        configuration.configure();
+        return configuration.buildSessionFactory();
+    }
+
+    public static Configuration buildConfiguration() {
         Configuration configuration = new Configuration();
-//        configuration.addAnnotatedClass(User.class); // либо в xml файле
-//        configuration.addAttributeConverter(new BirthdayConverter(), true);
+        configuration.addAnnotatedClass(User.class); // либо в xml файле
+        configuration.addAttributeConverter(new BirthdayConverter(), true);
         configuration.addAttributeConverter(new BirthdayConverter());
         configuration.registerTypeOverride(new JsonBinaryType());
-        configuration.configure();
-
-        return configuration.buildSessionFactory();
+        return configuration;
     }
 }

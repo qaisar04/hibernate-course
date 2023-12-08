@@ -30,6 +30,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
     testImplementation 'com.h2database:h2:2.2.224'
+    testImplementation 'org.testcontainers:postgresql:1.19.3'
 
 }
 

@@ -4,6 +4,7 @@ import kz.baltabayev.entity.Chat;
 import kz.baltabayev.entity.Company;
 import kz.baltabayev.entity.User;
 import kz.baltabayev.entity.UserChat;
+import kz.baltabayev.util.HibernateTestUtil;
 import kz.baltabayev.util.HibernateUtil;
 import lombok.Cleanup;
 import org.junit.jupiter.api.Test;
@@ -29,7 +30,7 @@ class HibernateRunnerTest {
 
     @Test
     void checkH2() {
-        try (var sessionFactory = HibernateUtil.buildSessionFactory();
+        try (var sessionFactory = HibernateTestUtil.buildSessionFactory();
              var session = sessionFactory.openSession()) {
             session.beginTransaction();
 

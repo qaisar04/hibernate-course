@@ -18,6 +18,7 @@
     <mapping class="kz.baltabayev.entity.Profile"/>
     <mapping class="kz.baltabayev.entity.Chat"/>
     <mapping class="kz.baltabayev.entity.UserChat"/>
+    <mapping class="kz.baltabayev.entity.User"/>
 
 
     <!-- DB schema will be updated if needed -->
