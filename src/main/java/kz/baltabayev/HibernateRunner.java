@@ -24,42 +24,42 @@ public class HibernateRunner {
 //        Connection connection = DriverManager
 //                .getConnection("db.url", "db.username", "db.password");
 
-        User user = User.builder()
-                .username("qaisar04")
-                .personalInfo(PersonalInfo.builder()
-                        .firstname("qaisar")
-                        .lastname("java")
-                        .birthDate(new Birthday(LocalDate.of(2004, 11, 29)))
-                        .build())
-                .role(Role.USER)
-                .info("""
-                            {
-                                "name":"Qaisar",
-                                "id":25
-                            }
-                            """)
-                .build();
+//        User user = User.builder()
+//                .username("qaisar04")
+//                .personalInfo(PersonalInfo.builder()
+//                        .firstname("qaisar")
+//                        .lastname("java")
+//                        .birthDate(new Birthday(LocalDate.of(2004, 11, 29)))
+//                        .build())
+//                .role(Role.USER)
+//                .info("""
+//                            {
+//                                "name":"Qaisar",
+//                                "id":25
+//                            }
+//                            """)
+//                .build();
 
         Company company1 = Company.builder()
                 .name("Google")
                 .build();
 
-        User user1 = User.builder()
-                .username("spring04")
-                .personalInfo(PersonalInfo.builder()
-                        .firstname("qaisar")
-                        .lastname("java")
-                        .birthDate(new Birthday(LocalDate.of(2004, 11, 29)))
-                        .build())
-                .role(Role.USER)
-                .company(company1)
-                .info("""
-                            {
-                                "location":"Pavlodar",
-                                "code":14
-                            }
-                            """)
-                .build();
+//        User user1 = User.builder()
+//                .username("spring04")
+//                .personalInfo(PersonalInfo.builder()
+//                        .firstname("qaisar")
+//                        .lastname("java")
+//                        .birthDate(new Birthday(LocalDate.of(2004, 11, 29)))
+//                        .build())
+//                .role(Role.USER)
+//                .company(company1)
+//                .info("""
+//                            {
+//                                "location":"Pavlodar",
+//                                "code":14
+//                            }
+//                            """)
+//                .build();
 
         try (SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
              Session session = sessionFactory.openSession()) {

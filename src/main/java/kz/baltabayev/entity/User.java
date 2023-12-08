@@ -18,7 +18,7 @@ import java.util.Set;
 @EqualsAndHashCode(of = "username")
 @ToString(exclude = {"company", "profile", "userChats"})
 @Entity
-@TypeDef(name = "qaisar", typeClass = JsonBinaryType.class)
+//@TypeDef(name = "qaisar", typeClass = JsonBinaryType.class)
 @Table(name = "users", schema = "public")
 public class User implements Comparable<User> {
 
@@ -40,8 +40,8 @@ public class User implements Comparable<User> {
 
 //    @Type(type = "com.vladmihalcea.hibernate.type.json.JsonBinaryType") // + регистрируем в Configuration
 //    @Type(type = "jsonb")
-    @Type(type = "qaisar")
-    private String info;
+//    @Type(type = "qaisar")
+//    private String info;
 
     @Enumerated(EnumType.STRING)
     private Role role;
