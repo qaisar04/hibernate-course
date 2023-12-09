@@ -20,7 +20,7 @@ import java.util.Set;
 @Entity
 @TypeDef(name = "qaisar", typeClass = JsonBinaryType.class)
 @Table(name = "users", schema = "public")
-public class User implements Comparable<User> {
+public class User implements Comparable<User>, BaseEntity<Long> {
 
 //    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "user_id_generator") // самый оптимальный вариант
 ////  @GeneratedValue(strategy = GenerationType.SEQUENCE)
