@@ -18,6 +18,8 @@
     <mapping class="kz.baltabayev.entity.Profile"/>
     <mapping class="kz.baltabayev.entity.Chat"/>
     <mapping class="kz.baltabayev.entity.UserChat"/>
+    <mapping class="kz.baltabayev.entity.Programmer"/>
+    <mapping class="kz.baltabayev.entity.Manager"/>
 
   </session-factory>
 </hibernate-configuration>

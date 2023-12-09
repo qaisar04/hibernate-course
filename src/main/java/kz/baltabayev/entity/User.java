@@ -7,27 +7,25 @@ import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @EqualsAndHashCode(of = "username")
 @ToString(exclude = {"company", "profile", "userChats"})
 @Entity
 @TypeDef(name = "qaisar", typeClass = JsonBinaryType.class)
 @Table(name = "users", schema = "public")
-public class User implements Comparable<User>, BaseEntity<Long> {
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public abstract class User implements Comparable<User>, BaseEntity<Long> {
 
 //    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "user_id_generator") // самый оптимальный вариант
 ////  @GeneratedValue(strategy = GenerationType.SEQUENCE)
 ////  @SequenceGenerator(name = "user_id_generator", sequenceName = "users_id_seq", allocationSize = 1)
 ////  hibernate_sequence (default for 'name' @SequenceGenerator)
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE )
     private Long id;
 
 //  @Id
@@ -53,12 +51,12 @@ public class User implements Comparable<User>, BaseEntity<Long> {
 
     @OneToOne( // лучше не использовать Bi-directional связь в OneToOne
             mappedBy = "user",
-            cascade = CascadeType.ALL,
-            optional = false
+            cascade = CascadeType.ALL
+//            optional = false
     )
     private Profile profile;
 
-    @Builder.Default
+//    @Builder.Default
     @OneToMany(mappedBy = "user")
     private List<UserChat> userChats = new ArrayList<>();
 

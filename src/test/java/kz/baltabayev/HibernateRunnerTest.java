@@ -1,9 +1,6 @@
 package kz.baltabayev;
 
-import kz.baltabayev.entity.Chat;
-import kz.baltabayev.entity.Company;
-import kz.baltabayev.entity.User;
-import kz.baltabayev.entity.UserChat;
+import kz.baltabayev.entity.*;
 import kz.baltabayev.util.HibernateTestUtil;
 import kz.baltabayev.util.HibernateUtil;
 import lombok.Cleanup;
@@ -18,10 +15,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.Instant;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
 
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.joining;
@@ -34,13 +28,31 @@ class HibernateRunnerTest {
              var session = sessionFactory.openSession()) {
             session.beginTransaction();
 
-            Company company = Company.builder()
+            Company netflix = Company.builder()
                     .name("Netflix")
                     .build();
 
-            session.save(company);
+            session.save(netflix);
 
+            Programmer programmer = Programmer.builder()
+                    .username("qaisar044")
+                    .language(Language.JAVA)
+                    .company(netflix)
+                    .build();
+            session.save(programmer);
 
+            Manager manager = Manager.builder()
+                    .username("qaisar044")
+                    .projectName("java-project ")
+                    .company(netflix)
+                    .build();
+            session.save(manager);
+            session.flush();
+
+            session.clear();
+
+            Programmer programmer1 = session.get(Programmer.class, 1L);
+            User manager1 = session.get(User.class, 2L);
 
 
             session.getTransaction().commit();
@@ -72,12 +84,15 @@ class HibernateRunnerTest {
 
             User user = session.get(User.class, 1L);
             Chat chat = session.get(Chat.class, 1L);
-            UserChat userChat = UserChat.builder()
-                    .user(user)
-                    .chat(chat)
-                    .createdAt(Instant.now())
-                    .createdBy(user.getUsername())
-                    .build();
+//            UserChat userChat = UserChat.builder()
+//                    .user(user)
+//                    .chat(chat)
+//                    .createdAt(Instant.now())
+//                    .createdBy(user.getUsername())
+//                    .build();
+
+            UserChat userChat = null;
+
 
             userChat.setUser(user);
             userChat.setChat(chat);
@@ -166,9 +181,7 @@ class HibernateRunnerTest {
                 .name("Amazon")
                 .build();
 
-        User user = User.builder()
-                .username("Bob")
-                .build();
+        User user = null;
 
 //        user.setCompany(company);
 //        company.getUsers().add(user);
@@ -210,8 +223,7 @@ class HibernateRunnerTest {
 
     @Test
     void checkReflectionApi() throws SQLException, IllegalAccessException {
-        User user = User.builder()
-                .build();
+        User user = null;
 
         String sql = """
                 insert

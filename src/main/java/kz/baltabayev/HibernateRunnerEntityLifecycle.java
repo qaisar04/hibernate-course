@@ -20,10 +20,12 @@ public class HibernateRunnerEntityLifecycle {
          что ее состояние - TRANSIENT. (строка 27)
         */
 
-        User user = User.builder()
-                .username("qwerty123@spring.com")
-                .role(Role.ADMIN)
-                .build();
+//        User user = User.builder()
+//                .username("qwerty123@spring.com")
+//                .role(Role.ADMIN)
+//                .build();
+
+        User user = null;
 
         try (SessionFactory sessionFactory = HibernateUtil.buildSessionFactory()) {
             try(Session session1 = sessionFactory.openSession()) {
@@ -43,10 +45,10 @@ public class HibernateRunnerEntityLifecycle {
             try(Session session2 = sessionFactory.openSession()) {
                 session2.beginTransaction();
 
-                user.setRole(Role.USER);
+//                user.setRole(Role.USER);
                 session2.refresh(user); // refresh используется для обновления состояния объекта из базы данных.
 
-                System.out.println(user.getRole()); // ADMIN
+//                System.out.println(user.getRole()); // ADMIN
 
                 session2.merge(user); // Метод merge в Hibernate используется для сохранения или обновления состояния объекта в базе данных.
 
