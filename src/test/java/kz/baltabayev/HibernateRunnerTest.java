@@ -35,7 +35,7 @@ class HibernateRunnerTest {
             session.save(netflix);
 
             Programmer programmer = Programmer.builder()
-                    .username("qaisar044")
+                    .username("test@test.com")
                     .language(Language.JAVA)
                     .company(netflix)
                     .build();
