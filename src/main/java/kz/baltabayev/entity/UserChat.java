@@ -1,13 +1,11 @@
 package kz.baltabayev.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.Instant;
 
+@EqualsAndHashCode(callSuper = false)
 @Entity
 @Data
 @AllArgsConstructor

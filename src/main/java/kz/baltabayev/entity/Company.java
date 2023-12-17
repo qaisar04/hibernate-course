@@ -11,9 +11,9 @@ import java.util.*;
 @AllArgsConstructor
 @NoArgsConstructor
 //@EqualsAndHashCode(exclude = "users")
-//@ToString(exclude = "users")
+//@ToString(of = "users")
+@ToString(exclude = "users")
 @EqualsAndHashCode(of = "name")
-@ToString(of = "users")
 @Builder
 @Table(name = "company")
 public class Company {

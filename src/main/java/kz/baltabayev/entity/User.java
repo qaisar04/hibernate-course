@@ -9,6 +9,8 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static kz.baltabayev.util.StringUtils.SPACE;
+
 @NamedQuery(name = "findUserByUserame", query = "select u from User u " +
                                                                        "where u.username = :username " +
                                                                        "order by u.username asc")
@@ -18,10 +20,11 @@ import java.util.List;
 @EqualsAndHashCode(of = "username")
 @ToString(exclude = {"company", "profile", "userChats"})
 @Entity
+@Builder
 @TypeDef(name = "qaisar", typeClass = JsonBinaryType.class)
 @Table(name = "users", schema = "public")
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class User implements Comparable<User>, BaseEntity<Long> {
+public class User implements Comparable<User>, BaseEntity<Long> {
 
 //    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "user_id_generator") // самый оптимальный вариант
 ////  @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -54,18 +57,28 @@ public abstract class User implements Comparable<User>, BaseEntity<Long> {
 
     @OneToOne( // лучше не использовать Bi-directional связь в OneToOne
             mappedBy = "user",
-            cascade = CascadeType.ALL
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
 //            optional = false
     )
     private Profile profile;
 
-//    @Builder.Default
+    @Builder.Default
     @OneToMany(mappedBy = "user")
     private List<UserChat> userChats = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "receiver")
+    private List<Payment> payments = new ArrayList<>();
 
 
     @Override
     public int compareTo(User o) {
         return username.compareTo(o.username);
     }
+
+    public String fullName() {
+        return getPersonalInfo().getFirstname() + SPACE + getPersonalInfo().getLastname();
+    }
+
 }
