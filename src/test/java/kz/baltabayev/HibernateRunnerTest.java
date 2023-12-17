@@ -4,6 +4,7 @@ import kz.baltabayev.entity.*;
 import kz.baltabayev.util.HibernateTestUtil;
 import kz.baltabayev.util.HibernateUtil;
 import lombok.Cleanup;
+import org.hibernate.query.Query;
 import org.junit.jupiter.api.Test;
 
 import javax.persistence.Column;
@@ -16,11 +17,52 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.List;
 
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.joining;
 
 class HibernateRunnerTest {
+
+    @Test
+    void checkHql() {
+        try (var sessionFactory = HibernateTestUtil.buildSessionFactory();
+             var session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            // HQL / JPQL
+
+            // select u.* from users u where u.firstname = 'Bob'
+//            var query = session.createQuery("select u from User u where u.personalInfo.firstname = 'Bob'", User.class);
+//            var result = query.list();
+
+//            List<User> list = session.createQuery("select u from User u where u.personalInfo.firstname = ?1", User.class)
+//                    .setParameter(1, "Bob")
+//                    .list();
+
+//            String name = "Bob";
+//            List<User> list = session.createQuery("select u from User u where u.personalInfo.firstname = ?1", User.class)
+//                    .setParameter(1, name)
+//                    .list();
+
+//            List<User> list = session.createQuery("select u from User u " +
+//                                                  "join u.company c " +
+//                                                  "where u.personalInfo.firstname = :firstname " +
+//                                                  "and c.name = :companyName", User.class)
+//                    .setParameter("firstname", "Bob")
+//                    .setParameter("companyName", "Netflix")
+//                    .list();
+
+            List<User> list = session.createQuery("select u from User u " +
+                                                  "where u.personalInfo.firstname = :firstname " +
+                                                  "and u.company.name  = :companyName " +
+                                                  "order by u.personalInfo.firstname asc", User.class) // ascending/descending
+                    .setParameter("firstname", "Bob")
+                    .setParameter("companyName", "Netflix")
+                    .list();
+
+            session.getTransaction().commit();
+        }
+    }
 
     @Test
     void checkH2() {

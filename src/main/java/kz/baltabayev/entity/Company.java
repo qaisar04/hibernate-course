@@ -1,6 +1,5 @@
 package kz.baltabayev.entity;
 
-import com.sun.source.tree.Tree;
 import lombok.*;
 import org.hibernate.annotations.SortNatural;
 
