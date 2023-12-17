@@ -9,6 +9,9 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@NamedQuery(name = "findUserByUserame", query = "select u from User u " +
+                                                                       "where u.username = :username " +
+                                                                       "order by u.username asc")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

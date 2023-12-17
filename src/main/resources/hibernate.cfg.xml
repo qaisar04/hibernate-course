@@ -12,7 +12,9 @@
 
     <property name="show_sql">true</property>
     <property name="format_sql">true</property>
-    
+    <property name="hibernate.hbm2ddl.auto">validate</property>
+
+
     <mapping class="kz.baltabayev.entity.User"/>
     <mapping class="kz.baltabayev.entity.Company"/>
     <mapping class="kz.baltabayev.entity.Profile"/>
@@ -23,9 +25,5 @@
     <mapping class="kz.baltabayev.entity.Manager"/>
 
 
-
-
-    <!-- DB schema will be updated if needed -->
-    <!-- <property name="hibernate.hbm2ddl.auto">update</property> -->
   </session-factory>
 </hibernate-configuration>

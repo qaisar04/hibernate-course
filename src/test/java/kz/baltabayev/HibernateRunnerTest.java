@@ -4,10 +4,15 @@ import kz.baltabayev.entity.*;
 import kz.baltabayev.util.HibernateTestUtil;
 import kz.baltabayev.util.HibernateUtil;
 import lombok.Cleanup;
+import org.hibernate.FlushMode;
+import org.hibernate.annotations.QueryHints;
+import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 import org.junit.jupiter.api.Test;
 
 import javax.persistence.Column;
+import javax.persistence.FlushModeType;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -52,13 +57,24 @@ class HibernateRunnerTest {
 //                    .setParameter("companyName", "Netflix")
 //                    .list();
 
-            List<User> list = session.createQuery("select u from User u " +
-                                                  "where u.personalInfo.firstname = :firstname " +
-                                                  "and u.company.name  = :companyName " +
-                                                  "order by u.personalInfo.firstname asc", User.class) // ascending/descending
-                    .setParameter("firstname", "Bob")
-                    .setParameter("companyName", "Netflix")
+//            List<User> list = session.createQuery("select u from User u " +
+//                                                  "where u.personalInfo.firstname = :firstname " +
+//                                                  "and u.company.name  = :companyName " +
+//                                                  "order by u.personalInfo.firstname asc", User.class) // ascending/descending
+//                    .setParameter("firstname", "Bob")
+//                    .setParameter("companyName", "Netflix")
+//                    .list();
+
+            List<User> list = session.createNamedQuery("findUserByUserame", User.class)
+                    .setParameter("username", "qaisar04")
+//                    .setHint(QueryHints.FLUSH_MODE, "auto")
+                    .setFlushMode(FlushModeType.AUTO)
                     .list();
+
+            int countRows = session.createQuery("update User u set u.role = 'ADMIN'")
+                    .executeUpdate();
+
+//            session.createNativeQuery("select u.* from users u where u.username = 'Bob'", User.class); // SQL
 
             session.getTransaction().commit();
         }
