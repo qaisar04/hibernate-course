@@ -2,7 +2,7 @@ package kz.baltabayev.entity;
 
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.Instant;
 
 @EqualsAndHashCode(callSuper = false)

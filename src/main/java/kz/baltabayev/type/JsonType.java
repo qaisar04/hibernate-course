@@ -12,8 +12,8 @@ import java.sql.SQLException;
 public class JsonType implements UserType {
 
     @Override
-    public int[] sqlTypes() {
-        return new int[0];
+    public int getSqlType() {
+        return 0;
     }
 
     @Override
@@ -32,7 +32,7 @@ public class JsonType implements UserType {
     }
 
     @Override
-    public Object nullSafeGet(ResultSet rs, String[] names, SharedSessionContractImplementor session, Object owner) throws HibernateException, SQLException {
+    public Object nullSafeGet(ResultSet resultSet, int i, SharedSessionContractImplementor sharedSessionContractImplementor, Object o) throws SQLException {
         return null;
     }
 

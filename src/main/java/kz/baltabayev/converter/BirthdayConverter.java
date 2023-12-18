@@ -1,9 +1,10 @@
 package kz.baltabayev.converter;
 
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 import kz.baltabayev.entity.Birthday;
 
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
+
 import java.sql.Date;
 import java.util.Optional;
 

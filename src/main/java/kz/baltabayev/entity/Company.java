@@ -3,15 +3,13 @@ package kz.baltabayev.entity;
 import lombok.*;
 import org.hibernate.annotations.SortNatural;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.*;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-//@EqualsAndHashCode(exclude = "users")
-//@ToString(of = "users")
 @ToString(exclude = "users")
 @EqualsAndHashCode(of = "name")
 @Builder
@@ -36,15 +34,9 @@ public class Company {
     @Builder.Default
     @ElementCollection
     @CollectionTable(name = "company_locale", joinColumns = @JoinColumn(name = "company_id"))
-//    @AttributeOverride(name = "lang", column = @Column(name = "language"))
-//    private List<LocaleInfo> locales = new ArrayList<>();
     @MapKeyColumn(name = "lang") // для указания ключа Map
     private Map<String, String> locales = new HashMap<>(); // key - lang, val - desc
 
-
-//    @OneToMany(mappedBy = "company")
-//    @JoinColumn(name = "company_id")
-//    private Set<User> users
 
     public void addUser(User user) {
         users.put(user.getUsername(), user);

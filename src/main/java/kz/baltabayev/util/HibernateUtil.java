@@ -20,8 +20,8 @@ public class HibernateUtil {
         Configuration configuration = new Configuration();
         configuration.addAnnotatedClass(User.class); // либо в xml файле
         configuration.addAttributeConverter(new BirthdayConverter(), true);
-        configuration.addAttributeConverter(new BirthdayConverter());
-        configuration.registerTypeOverride(new JsonBinaryType());
+//        configuration.addAttributeConverter(new BirthdayConverter());
+//        configuration.registerTypeOverride(new JsonBinaryType());
         return configuration;
     }
 }

@@ -10,10 +10,10 @@ import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 import org.junit.jupiter.api.Test;
 
-import javax.persistence.Column;
-import javax.persistence.FlushModeType;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.FlushModeType;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.Table;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
