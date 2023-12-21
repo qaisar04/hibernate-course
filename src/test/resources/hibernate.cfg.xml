@@ -1,25 +1,21 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!DOCTYPE hibernate-configuration PUBLIC
-    "-//Hibernate/Hibernate Configuration DTD//EN"
-    "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+        "-//Hibernate/Hibernate Configuration DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
-  <session-factory>
-    <property name="connection.driver_class">org.postgresql.Driver</property>
-    <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+    <session-factory>
+        <property name="connection.driver_class">org.postgresql.Driver</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+        <property name="show_sql">true</property>
+        <property name="format_sql">true</property>
+        <!-- DB schema will be updated if needed -->
+        <property name="hibernate.hbm2ddl.auto">create</property>
 
-    <!-- DB schema will be updated if needed -->
-     <property name="hibernate.hbm2ddl.auto">create</property>
-
-    <property name="show_sql">true</property>
-    <property name="format_sql">true</property>
-    
-    <mapping class="kz.baltabayev.entity.User"/>
-    <mapping class="kz.baltabayev.entity.Company"/>
-    <mapping class="kz.baltabayev.entity.Profile"/>
-    <mapping class="kz.baltabayev.entity.Chat"/>
-    <mapping class="kz.baltabayev.entity.UserChat"/>
-    <mapping class="kz.baltabayev.entity.Payment"/>
-
-
-  </session-factory>
+        <mapping class="kz.baltabayev.entity.User"/>
+        <mapping class="kz.baltabayev.entity.Profile"/>
+        <mapping class="kz.baltabayev.entity.Company"/>
+        <mapping class="kz.baltabayev.entity.Chat"/>
+        <mapping class="kz.baltabayev.entity.UserChat"/>
+        <mapping class="kz.baltabayev.entity.Payment"/>
+    </session-factory>
 </hibernate-configuration>

@@ -1,11 +1,8 @@
 package kz.baltabayev.entity;
 
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
-import lombok.*;
 import jakarta.persistence.*;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.annotations.Type;
-import org.hibernate.type.SqlTypes;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;

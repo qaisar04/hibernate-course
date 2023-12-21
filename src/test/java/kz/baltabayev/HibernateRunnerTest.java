@@ -1,19 +1,17 @@
 package kz.baltabayev;
 
-import kz.baltabayev.entity.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.FlushModeType;
+import jakarta.persistence.Table;
+import kz.baltabayev.entity.Chat;
+import kz.baltabayev.entity.Company;
+import kz.baltabayev.entity.User;
+import kz.baltabayev.entity.UserChat;
 import kz.baltabayev.util.HibernateTestUtil;
 import kz.baltabayev.util.HibernateUtil;
 import lombok.Cleanup;
-import org.hibernate.FlushMode;
-import org.hibernate.annotations.QueryHints;
-import org.hibernate.query.NativeQuery;
-import org.hibernate.query.Query;
 import org.junit.jupiter.api.Test;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.FlushModeType;
-import jakarta.persistence.NamedQuery;
-import jakarta.persistence.Table;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
