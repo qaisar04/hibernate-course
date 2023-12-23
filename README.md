@@ -182,5 +182,10 @@ public class HibernateRunner {
  - `GraphSemantic.LOAD` - это семантика графа, которая указывает `Hibernate` загружать связанные сущности при выполнении запроса.
  - Что касается второго типа `GraphSemantic.FETCH`, то загружать связанные сущности будут так как мы указали в `FetchType`
 
-
+## Best Practices
+- Избегать `bidirectional` связи в `OneToOne`
+- Использовать `LAZY` везде
+- Не следует использовать @BatchSize (так как он вообще не решает проблему N+1), @Fetch
+- Использовать ключевое слово fetch (`HQL, Criteria API, Querydsl, HibernateQuery`)
+- Предпочитать `Entity Graph API` чем @FetchProfile
 

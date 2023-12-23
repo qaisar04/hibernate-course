@@ -63,7 +63,7 @@ public class User implements Comparable<User>, BaseEntity<Long> {
 
     @Builder.Default
     @OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY)
-    private Set<Payment> payments = new HashSet<>();
+    private List<Payment> payments = new ArrayList<>();
 
     @Override
     public int compareTo(User o) {
