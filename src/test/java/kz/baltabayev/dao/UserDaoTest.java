@@ -1,6 +1,7 @@
 package kz.baltabayev.dao;
 
 import com.querydsl.core.Tuple;
+import kz.baltabayev.dto.PaymentFilter;
 import kz.baltabayev.entity.Payment;
 import kz.baltabayev.entity.User;
 import kz.baltabayev.util.HibernateTestUtil;
@@ -110,7 +111,11 @@ class UserDaoTest {
         @Cleanup Session session = sessionFactory.openSession();
         session.beginTransaction();
 
-        Double averagePaymentAmount = userDao.findAveragePaymentAmountByFirstAndLastNames(session, "Bill", "Gates");
+        PaymentFilter filter = PaymentFilter.builder()
+                .firstname("Bill")
+                .lastname("Gates")
+                .build();
+        Double averagePaymentAmount = userDao.findAveragePaymentAmountByFirstAndLastNames(session, filter);
         assertThat(averagePaymentAmount).isEqualTo(300.0);
 
         session.getTransaction().commit();

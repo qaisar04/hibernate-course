@@ -1,13 +1,16 @@
 package kz.baltabayev.dao;
 
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.hibernate.HibernateQuery;
+import kz.baltabayev.dto.PaymentFilter;
 import kz.baltabayev.entity.Payment;
 import kz.baltabayev.entity.User;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.hibernate.Session;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static kz.baltabayev.entity.QCompany.company;
@@ -82,13 +85,27 @@ public class UserDao {
     /**
      * Возвращает среднюю зарплату сотрудника с указанными именем и фамилией
      */
-    public Double findAveragePaymentAmountByFirstAndLastNames(Session session, String firstName, String lastName) {
+    public Double findAveragePaymentAmountByFirstAndLastNames(Session session, PaymentFilter filter) {
+
+//        List<Predicate> predicates = new ArrayList<>();
+//        if (filter.getFirstname() != null) {
+//            predicates.add(user.personalInfo.firstname.eq(filter.getFirstname()));
+//        }
+//        if (filter.getLastname() != null) {
+//            predicates.add(user.personalInfo.lastname.eq(filter.getLastname()));
+//        }
+
+        Predicate predicate = QPredicate.builder()
+                .add(filter.getFirstname(), user.personalInfo.firstname::eq)
+                .add(filter.getLastname(), user.personalInfo.lastname::eq)
+                .buildAnd();
+
         return new HibernateQuery<Double>(session)
                 .select(payment.amount.avg())
                 .from(payment)
                 .join(payment.receiver, user)
-                .where(user.personalInfo.firstname.eq(firstName)
-                        .and(user.personalInfo.firstname.eq(lastName)))
+                .where(predicate)
+//                .where(predicates.toArray(Predicate[]::new))
                 .fetchFirst();
     }
 
@@ -119,9 +136,9 @@ public class UserDao {
                 .groupBy(user.id)
                 .having(payment.amount.avg().gt(
                         new HibernateQuery<Double>(session)
-                        .select(payment.amount.avg())
-                        .from(payment)
-                        ))
+                                .select(payment.amount.avg())
+                                .from(payment)
+                ))
                 .orderBy(user.personalInfo.firstname.asc())
                 .from()
                 .fetch();

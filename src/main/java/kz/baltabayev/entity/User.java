@@ -3,9 +3,12 @@ package kz.baltabayev.entity;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static kz.baltabayev.util.StringUtils.SPACE;
 
@@ -16,7 +19,7 @@ import static kz.baltabayev.util.StringUtils.SPACE;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = "username")
-@ToString(exclude = {"company", "profile", "userChats"})
+@ToString(exclude = {"company", "userChats", "payments"})
 @Entity
 @Builder
 @Table(name = "users", schema = "public")
@@ -43,20 +46,22 @@ public class User implements Comparable<User>, BaseEntity<Long> {
     @JoinColumn(name = "company_id") // названия нашей колонки в таблице 'users'
     private Company company;
 
-    @OneToOne( // лучше не использовать Bi-directional связь в OneToOne
-            mappedBy = "user",
-            cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY
-    )
-    private Profile profile;
+//    @OneToOne( // лучше не использовать Bi-directional связь в OneToOne
+//            mappedBy = "user",
+//            cascade = CascadeType.ALL,
+//            fetch = FetchType.LAZY
+//    )
+//    private Profile profile;
 
     @Builder.Default
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<UserChat> userChats = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "receiver")
-    private List<Payment> payments = new ArrayList<>();
+    @BatchSize(size =  3)
+    // 1 + N -> 1 + 5 -> 1 + 5/3(@BatchSize) -> 3
+    @OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY)
+    private Set<Payment> payments = new HashSet<>();
 
 
     @Override

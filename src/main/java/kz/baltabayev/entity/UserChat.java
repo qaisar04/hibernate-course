@@ -21,7 +21,7 @@ public class UserChat extends AuditableEntity<Long> {
     @ManyToOne
     private User user;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "chat_id")
     private Chat chat;
 

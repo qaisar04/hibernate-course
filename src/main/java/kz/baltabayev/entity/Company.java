@@ -1,6 +1,7 @@
 package kz.baltabayev.entity;
 
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.SortNatural;
 
 import jakarta.persistence.*;
@@ -14,6 +15,7 @@ import java.util.*;
 @EqualsAndHashCode(of = "name")
 @Builder
 @Table(name = "company")
+@BatchSize(size =  3)
 public class Company {
 
     @Id
