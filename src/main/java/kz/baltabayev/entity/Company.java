@@ -15,7 +15,6 @@ import java.util.*;
 @EqualsAndHashCode(of = "name")
 @Builder
 @Table(name = "company")
-@BatchSize(size =  3)
 public class Company {
 
     @Id
@@ -30,8 +29,6 @@ public class Company {
     @MapKey(name = "username")
     @SortNatural
     private SortedMap<String, User> users = new TreeMap<>(); // PersistentSortedSet
-
-
 
     @Builder.Default
     @ElementCollection

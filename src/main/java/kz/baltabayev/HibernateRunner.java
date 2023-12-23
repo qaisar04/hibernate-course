@@ -19,6 +19,8 @@ public class HibernateRunner {
 
             List<User> list = session.createQuery("select u from User u", User.class)
                     .list();
+            list.forEach(user -> System.out.println(user.getPayments().size()));
+            list.forEach(user -> System.out.println(user.getCompany().getName()));
 
 
             session.getTransaction().commit();

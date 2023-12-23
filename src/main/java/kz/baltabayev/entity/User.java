@@ -4,6 +4,8 @@ import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -43,6 +45,7 @@ public class User implements Comparable<User>, BaseEntity<Long> {
     private Role role;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "company_id") // названия нашей колонки в таблице 'users'
     private Company company;
 
@@ -58,11 +61,12 @@ public class User implements Comparable<User>, BaseEntity<Long> {
     private List<UserChat> userChats = new ArrayList<>();
 
     @Builder.Default
-    @BatchSize(size =  3)
-    // 1 + N -> 1 + 5 -> 1 + 5/3(@BatchSize) -> 3
+    @Fetch(FetchMode.SUBSELECT)
+    // 1 + N -> 1 + 5 -> 1 + 5/3 -> 3 (BatchSize)
+    // 1 + N -> 1 + 1 -> 2 (@Fetch)
+
     @OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY)
     private Set<Payment> payments = new HashSet<>();
-
 
     @Override
     public int compareTo(User o) {
