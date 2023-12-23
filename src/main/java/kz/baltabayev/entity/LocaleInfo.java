@@ -12,7 +12,6 @@ import jakarta.persistence.Embeddable;
 @AllArgsConstructor(staticName = "of")
 @Embeddable
 public class LocaleInfo {
-
     private String lang;
     private String description;
 }

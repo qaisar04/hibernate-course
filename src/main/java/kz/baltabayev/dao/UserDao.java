@@ -62,7 +62,7 @@ public class UserDao {
         return new HibernateQuery<User>(session)
                 .select(user)
                 .from(company)
-                .join(company.users, user)
+                .join(company.users, user).fetchJoin() // в criteria делаем через ключевое слово fetch
                 .where(company.name.eq(companyName))
                 .fetch();
     }

@@ -13,12 +13,12 @@ public class HibernateRunner {
             Session session = sessionFactory.openSession()) {
             session.beginTransaction();
 
-//            User user = session.get(User.class, 1);
-//            System.out.println(user.getPayments().size());
-//            System.out.println(user.getCompany().getName());
+            List<User> list = session.createQuery("select u from User u" +
+                                                  " join fetch u.payments " +
+                                                  " join fetch u.company" +
+                                                  " where 1 = 1", User.class)
+                    .list(); // в данном случае мы достали все в одном запросе.
 
-            List<User> list = session.createQuery("select u from User u", User.class)
-                    .list();
             list.forEach(user -> System.out.println(user.getPayments().size()));
             list.forEach(user -> System.out.println(user.getCompany().getName()));
 

@@ -60,11 +60,9 @@ public class User implements Comparable<User>, BaseEntity<Long> {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<UserChat> userChats = new ArrayList<>();
 
-    @Builder.Default
-    @Fetch(FetchMode.SUBSELECT)
     // 1 + N -> 1 + 5 -> 1 + 5/3 -> 3 (BatchSize)
     // 1 + N -> 1 + 1 -> 2 (@Fetch)
-
+    @Builder.Default
     @OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY)
     private Set<Payment> payments = new HashSet<>();
 
