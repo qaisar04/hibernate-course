@@ -13,18 +13,16 @@ import java.util.Set;
 
 import static kz.baltabayev.util.StringUtils.SPACE;
 
-@FetchProfile(name = "withCompanyAndPayment", fetchOverrides = {
-        @FetchProfile.FetchOverride(
-                entity = User.class,
-                association = "company",
-                mode = FetchMode.JOIN
-        ),
-        @FetchProfile.FetchOverride(
-                entity = User.class,
-                association = "payments",
-                mode = FetchMode.JOIN
-        )
-})
+@NamedEntityGraph(
+        name = "withCompanyAndChat",
+        attributeNodes = {
+                @NamedAttributeNode("company"),
+                @NamedAttributeNode(value = "userChats", subgraph = "chats")
+        },
+        subgraphs = {
+                @NamedSubgraph(name = "chats", attributeNodes = @NamedAttributeNode("chat"))
+        }
+)
 @NamedQuery(name = "findUserByUserame", query = "select u from User u " +
                                                 "where u.username = :username " +
                                                 "order by u.username asc")
@@ -56,15 +54,13 @@ public class User implements Comparable<User>, BaseEntity<Long> {
     private Role role;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id") // названия нашей колонки в таблице 'users'
+    @JoinColumn(name = "company_id")
     private Company company;
 
     @Builder.Default
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<UserChat> userChats = new ArrayList<>();
 
-    // 1 + N -> 1 + 5 -> 1 + 5/3 -> 3 (BatchSize)
-    // 1 + N -> 1 + 1 -> 2 (@Fetch)
     @Builder.Default
     @OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY)
     private Set<Payment> payments = new HashSet<>();

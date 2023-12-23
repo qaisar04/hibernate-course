@@ -74,11 +74,12 @@ public List<User> findAllByCompanyName(Session session, String companyName) {
                 mode = FetchMode.JOIN
         )
 })
+@Entity
 public class User implements Comparable<User>, BaseEntity<Long> {
      // code
 }
 ```
-Использование:
+Пример использования:
 ```java
 public class HibernateRunner {
     public static void main(String[] args) {
@@ -95,4 +96,91 @@ public class HibernateRunner {
     }
 }
 ```
+
+### Entity Graphs
+Entity Graphs - это механизм, используемый в Java Persistence API (JPA), который позволяет эффективно извлекать данные из базы данных, особенно когда необходимо загружать связанные сущности с определенными атрибутами.
+Это особенно полезно в сценариях, где вы хотите избежать `нежелательного` загрузки всех данных.
+
+Есть несколько способов сделать это:
+
+1) Это использовать аннотацию @NamedEntityGraph где прописываем в параметрах названия данного графа, название полей в параметре attributeNodes, которые нужно будет загрузить, и при необходимости также написать subgraphs:
+```java
+@NamedEntityGraph(
+        name = "withCompanyAndChat",
+        attributeNodes = {
+                @NamedAttributeNode("company"),
+                @NamedAttributeNode(value = "userChats", subgraph = "chats")
+        },
+        subgraphs = {
+                @NamedSubgraph(name = "chats", attributeNodes = @NamedAttributeNode("chat"))
+        }
+)
+@Entity
+public class User implements Comparable<User>, BaseEntity<Long> {
+    // code 
+}
+```
+Пример использования:
+```java
+public class HibernateRunner {
+    public static void main(String[] args) {
+        try(SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
+            Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            
+
+            Map<String, Object> properties = Map.of(
+                  GraphSemantic.LOAD.getJakartaHintName(), session.getEntityGraph("withCompanyAndChat")
+            );
+            User user = session.find(User.class, 1L, properties);
+
+            System.out.println(user.getCompany().getName());
+            System.out.println(user.getUserChats().size());
+
+            // можно использовать как и в find(аналог get) так и в query
+            List<User> users = session.createQuery("select u from User u where 1 = 1", User.class)
+                    .setHint(GraphSemantic.LOAD.getJakartaHintName(), session.getEntityGraph("withCompanyAndChat"))
+                    .list();
+
+            users.forEach(it -> System.out.println(it.getCompany().getName()));
+            users.forEach(it -> System.out.println(it.getUserChats().size()));
+
+
+
+            session.getTransaction().commit();
+        }
+    }
+}
+```
+2) Использовать java код:
+```java
+public class HibernateRunner {
+    public static void main(String[] args) {
+        try(SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
+            Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+
+            RootGraph<User> userGraph = session.createEntityGraph(User.class); // создания EntityGraph для класса User
+            userGraph.addAttributeNodes("company", "userChats"); // задаются атрибуты, которые должны быть загружены. В данном случае, атрибуты "company" и "userChats" сущности User.
+            SubGraph<UserChat> userChatSubGraph = userGraph.addSubgraph("userChats", UserChat.class); 
+            userChatSubGraph.addAttributeNodes("chat"); // Добавляется подграф для атрибута "userChats". В этом подграфе указывается, что также нужно загрузить атрибут "chat" сущности UserChat.
+
+            Map<String, Object> properties = Map.of(
+                    GraphSemantic.LOAD.getJakartaHintName(), userGraph
+            );
+            User user = session.find(User.class, 1L, properties);
+
+            System.out.println(user.getCompany().getName());
+            System.out.println(user.getUserChats().size());
+
+            session.getTransaction().commit();
+        }
+    }
+}
+```
+Есть два типа для `GraphSemantic` это LOAD что используется в коде и второй это FETCH.
+ - `GraphSemantic.LOAD` - это семантика графа, которая указывает `Hibernate` загружать связанные сущности при выполнении запроса.
+ - Что касается второго типа `GraphSemantic.FETCH`, то загружать связанные сущности будут так как мы указали в `FetchType`
+
+
 
