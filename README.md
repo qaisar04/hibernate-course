@@ -11,3 +11,88 @@
 - Решение проблемы N+1 с помощью батчинга или размера пакета сводится к минимизации количества запросов к базе данных. Вместо выполнения отдельного запроса для каждой записи, вы можете выполнить всего два запроса: один для родительских записей и один для дочерних. Можно использовать аннотацию @BatchSize над полем так и над классом.  
 - @Fetch - это аннотация Hibernate, которая позволяет оптимизировать запросы к базе данных и решить проблему N+1.
 Она позволяет указать стратегию выборки для связанных сущностей. Например, @Fetch(FetchMode.JOIN) говорит Hibernate использовать операцию JOIN для выборки связанных сущностей, что может помочь избежать проблемы N+1.
+
+@Fetch, @FetchProfile, и Query Fetch - это аннотации Hibernate, которые используются для оптимизации запросов к базе данных.
+
+@Fetch: Эта аннотация позволяет указать стратегию выборки для связанных сущностей. 
+Например, @Fetch(FetchMode.JOIN) говорит Hibernate использовать операцию JOIN для выборки связанных сущностей. Однако стоит отметить, что использование @Fetch(FetchMode.JOIN) может привести к избыточным данным, если не использовать его правильно
+
+Query Fetch: Это стратегия выборки, которая используется при выполнении запроса. Она позволяет явно указать, какие связанные сущности следует выбирать вместе с основной сущностью.
+```java
+// HQL
+List<User> list = session.createQuery("select u from User u" +
+                                                  " join fetch u.payments " +
+                                                  " join fetch u.company" +
+                                                  " where 1 = 1", User.class)
+                    .list(); // в данном случае мы достали все в одном запросе.
+
+// Criteria API
+public List<Payment> findAllPaymentsByCompanyName(Session session, String companyName) {
+    HibernateCriteriaBuilder cb = session.getCriteriaBuilder();
+    JpaCriteriaQuery<Payment> criteria = cb.createQuery(Payment.class);
+
+    JpaRoot<Payment> payment = criteria.from(Payment.class);
+    JpaJoin<Payment, User> user = payment.join(Payment_.receiver);
+    payment.fetch(Payment_.receiver); // в criteria делаем через ключевое слово fetch
+
+    JpaJoin<User, Company> company = user.join(User_.company);
+
+    criteria.select(payment).where(
+                    cb.equal(company.get(Company_.name), companyName)
+            )
+            .orderBy(cb.asc(user.get(User_.personalInfo).get(PersonalInfo_.firstname)),
+                    cb.asc(payment.get(Payment_.amount))
+            );
+
+    return session.createQuery(criteria)
+            .list();
+}
+
+// HibernateQuery
+public List<User> findAllByCompanyName(Session session, String companyName) {
+    return new HibernateQuery<User>(session)
+            .select(user)
+            .from(company)
+            .join(company.users, user).fetchJoin() 
+            .where(company.name.eq(companyName))
+            .fetch();
+}
+```
+
+
+@FetchProfile: Эта аннотация позволяет определить профиль выборки, который можно затем применить к сессии или запросу. Это позволяет динамически изменять стратегию выборки в зависимости от контекста
+```java
+@FetchProfile(name = "withCompanyAndPayment", fetchOverrides = {
+        @FetchProfile.FetchOverride(
+                entity = User.class,
+                association = "company", // поле в классе User
+                mode = FetchMode.JOIN
+        ),
+        @FetchProfile.FetchOverride(
+                entity = User.class,
+                association = "payments", // поле в классе User
+                mode = FetchMode.JOIN
+        )
+})
+public class User implements Comparable<User>, BaseEntity<Long> {
+     // code
+}
+```
+Использование:
+```java
+public class HibernateRunner {
+    public static void main(String[] args) {
+        try(SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
+            Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            session.enableFetchProfile("withCompanyAndPayment");
+
+            User user = session.get(User.class, 1L);
+            System.out.println(user.getCompany().getName());
+
+            session.getTransaction().commit();
+        }
+    }
+}
+```
+

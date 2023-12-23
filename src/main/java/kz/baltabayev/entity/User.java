@@ -3,9 +3,8 @@ package kz.baltabayev.entity;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.FetchProfile;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -14,6 +13,18 @@ import java.util.Set;
 
 import static kz.baltabayev.util.StringUtils.SPACE;
 
+@FetchProfile(name = "withCompanyAndPayment", fetchOverrides = {
+        @FetchProfile.FetchOverride(
+                entity = User.class,
+                association = "company",
+                mode = FetchMode.JOIN
+        ),
+        @FetchProfile.FetchOverride(
+                entity = User.class,
+                association = "payments",
+                mode = FetchMode.JOIN
+        )
+})
 @NamedQuery(name = "findUserByUserame", query = "select u from User u " +
                                                 "where u.username = :username " +
                                                 "order by u.username asc")
@@ -45,16 +56,8 @@ public class User implements Comparable<User>, BaseEntity<Long> {
     private Role role;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "company_id") // названия нашей колонки в таблице 'users'
     private Company company;
-
-//    @OneToOne( // лучше не использовать Bi-directional связь в OneToOne
-//            mappedBy = "user",
-//            cascade = CascadeType.ALL,
-//            fetch = FetchType.LAZY
-//    )
-//    private Profile profile;
 
     @Builder.Default
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
