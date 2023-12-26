@@ -1,49 +1,32 @@
 package kz.baltabayev;
 
-import kz.baltabayev.entity.User;
-import kz.baltabayev.entity.UserChat;
+import jakarta.persistence.LockModeType;
+import jakarta.transaction.Transactional;
+import kz.baltabayev.entity.Payment;
 import kz.baltabayev.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.graph.GraphSemantic;
-import org.hibernate.graph.RootGraph;
-import org.hibernate.graph.SubGraph;
-
-import java.util.List;
-import java.util.Map;
 
 public class HibernateRunner {
+    @Transactional
     public static void main(String[] args) {
+
         try(SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
-            Session session = sessionFactory.openSession()) {
+            Session session = sessionFactory.openSession();
+            Session session1 = sessionFactory.openSession()) {
             session.beginTransaction();
+            session1.beginTransaction();
+//          session.doWork(connection -> System.out.println(connection.getTransactionIsolation())); // 2
 
-            RootGraph<User> userGraph = session.createEntityGraph(User.class);
-            userGraph.addAttributeNodes("company", "userChats");
-            SubGraph<UserChat> userChatSubGraph = userGraph.addSubgraph("userChats", UserChat.class);
-            userChatSubGraph.addAttributeNodes("chat");
+            Payment payment = session.find(Payment.class, 1L, LockModeType.OPTIMISTIC);
+            payment.setAmount(payment.getAmount() + 10);
 
-
-            Map<String, Object> properties = Map.of(
-//                  GraphSemantic.LOAD.getJakartaHintName(), session.getEntityGraph("withCompanyAndChat")
-                    GraphSemantic.LOAD.getJakartaHintName(), userGraph
-            );
-            User user = session.find(User.class, 1L, properties);
-
-            System.out.println(user.getCompany().getName());
-            System.out.println(user.getUserChats().size());
-
-
-            List<User> users = session.createQuery("select u from User u where 1 = 1", User.class)
-                    .setHint(GraphSemantic.LOAD.getJakartaHintName(), session.getEntityGraph("withCompanyAndChat"))
-                    .list();
-
-            users.forEach(it -> System.out.println(it.getCompany().getName()));
-            users.forEach(it -> System.out.println(it.getUserChats().size()));
-
+            Payment theSamePayment = session1.find(Payment.class, 1L, LockModeType.OPTIMISTIC);
+            theSamePayment.setAmount(theSamePayment.getAmount() + 20);
 
 
             session.getTransaction().commit();
+            session1.getTransaction().commit(); // OptimisticLockException
         }
     }
 }
