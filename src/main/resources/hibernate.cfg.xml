@@ -13,7 +13,6 @@
         <property name="show_sql">true</property>
         <property name="format_sql">true</property>
         <property name="hibernate.hbm2ddl.auto">validate</property>
-<!--    <property name="hibernate.connection.isolation">2</property> default value = 2 -->
 
         <mapping class="kz.baltabayev.entity.User"/>
         <mapping class="kz.baltabayev.entity.Company"/>

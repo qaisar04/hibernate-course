@@ -1,6 +1,5 @@
 package kz.baltabayev;
 
-import jakarta.persistence.LockModeType;
 import jakarta.transaction.Transactional;
 import kz.baltabayev.entity.Payment;
 import kz.baltabayev.util.HibernateUtil;
@@ -12,21 +11,13 @@ public class HibernateRunner {
     public static void main(String[] args) {
 
         try(SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
-            Session session = sessionFactory.openSession();
-            Session session1 = sessionFactory.openSession()) {
+            Session session = sessionFactory.openSession()) {
             session.beginTransaction();
-            session1.beginTransaction();
-//          session.doWork(connection -> System.out.println(connection.getTransactionIsolation())); // 2
 
-            Payment payment = session.find(Payment.class, 1L, LockModeType.OPTIMISTIC);
+            Payment payment = session.find(Payment.class, 1L);
             payment.setAmount(payment.getAmount() + 10);
 
-            Payment theSamePayment = session1.find(Payment.class, 1L, LockModeType.OPTIMISTIC);
-            theSamePayment.setAmount(theSamePayment.getAmount() + 20);
-
-
             session.getTransaction().commit();
-            session1.getTransaction().commit(); // OptimisticLockException
         }
     }
 }
