@@ -17,7 +17,7 @@ public class HibernateRunner {
             session.beginTransaction();
             session1.beginTransaction();
 
-            Payment payment = session.find(Payment.class, 1L, LockModeType.PESSIMISTIC_READ); // where p1_0.id=? for share
+            Payment payment = session.find(Payment.class, 1L, LockModeType.PESSIMISTIC_WRITE); // where p1_0.id=? for no key update
             payment.setAmount(payment.getAmount() + 10);
 
             Payment theSamePayment = session1.find(Payment.class, 1L);
