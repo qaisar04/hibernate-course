@@ -15,8 +15,6 @@ import org.hibernate.annotations.OptimisticLocking;
 @NoArgsConstructor
 @Builder
 @Entity
-@OptimisticLocking(type = OptimisticLockType.ALL) // лучше использовать ALL или VERSION
-@DynamicUpdate
 public class Payment implements BaseEntity<Long> {
 
     @Id
