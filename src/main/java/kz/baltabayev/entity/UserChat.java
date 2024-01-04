@@ -1,5 +1,6 @@
 package kz.baltabayev.entity;
 
+import kz.baltabayev.listener.UserChatListener;
 import lombok.*;
 
 import jakarta.persistence.*;
@@ -12,6 +13,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @Builder
 @Table(name = "users_chat")
+@EntityListeners(value = {UserChatListener.class})
 public class UserChat extends AuditableEntity<Long> {
 
     @Id
