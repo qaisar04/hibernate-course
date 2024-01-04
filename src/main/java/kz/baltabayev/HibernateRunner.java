@@ -1,10 +1,8 @@
 package kz.baltabayev;
 
-import jakarta.persistence.LockModeType;
 import jakarta.transaction.Transactional;
 import kz.baltabayev.entity.Payment;
 import kz.baltabayev.util.HibernateUtil;
-import kz.baltabayev.util.TestDataImporter;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
