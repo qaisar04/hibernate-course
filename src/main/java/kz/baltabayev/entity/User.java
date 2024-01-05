@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.FetchProfile;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -35,6 +37,7 @@ import static kz.baltabayev.util.StringUtils.SPACE;
 @Builder
 @Table(name = "users", schema = "public")
 @Inheritance(strategy = InheritanceType.JOINED)
+@Audited
 public class User implements Comparable<User>, BaseEntity<Long> {
 
     @Id
@@ -57,10 +60,12 @@ public class User implements Comparable<User>, BaseEntity<Long> {
     @JoinColumn(name = "company_id")
     private Company company;
 
+    @NotAudited
     @Builder.Default
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<UserChat> userChats = new ArrayList<>();
 
+    @NotAudited
     @Builder.Default
     @OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY)
     private List<Payment> payments = new ArrayList<>();

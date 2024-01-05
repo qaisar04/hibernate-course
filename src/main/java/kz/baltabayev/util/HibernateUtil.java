@@ -2,6 +2,7 @@ package kz.baltabayev.util;
 
 import kz.baltabayev.converter.BirthdayConverter;
 import kz.baltabayev.entity.Audit;
+import kz.baltabayev.entity.Revision;
 import kz.baltabayev.interceptor.GlobalInterceptor;
 import kz.baltabayev.listener.AuditTableListener;
 import lombok.experimental.UtilityClass;
@@ -17,9 +18,7 @@ public class HibernateUtil {
     public static SessionFactory buildSessionFactory() {
         Configuration configuration = buildConfiguration();
         configuration.configure();
-        SessionFactory sessionFactory = configuration.buildSessionFactory();
-        registerListeners(sessionFactory);
-        return sessionFactory;
+        return configuration.buildSessionFactory();
     }
 
     private static void registerListeners(SessionFactory sessionFactory) {
@@ -37,6 +36,7 @@ public class HibernateUtil {
         Configuration configuration = new Configuration();
         configuration.addAttributeConverter(new BirthdayConverter(), true);
         configuration.addAnnotatedClass(Audit.class);
+        configuration.addAnnotatedClass(Revision.class);
         configuration.setInterceptor(new GlobalInterceptor());
         return configuration;
     }
