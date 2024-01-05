@@ -20,7 +20,6 @@
         <mapping class="kz.baltabayev.entity.Profile"/>
         <mapping class="kz.baltabayev.entity.Chat"/>
         <mapping class="kz.baltabayev.entity.UserChat"/>
-        <mapping class="kz.baltabayev.entity.User"/>
 
     </session-factory>
 </hibernate-configuration>

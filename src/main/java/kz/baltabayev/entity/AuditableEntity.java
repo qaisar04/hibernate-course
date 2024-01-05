@@ -2,9 +2,7 @@ package kz.baltabayev.entity;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
-import kz.baltabayev.listener.AuditListener;
+import kz.baltabayev.listener.AuditDatesListener;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +12,7 @@ import java.time.Instant;
 @MappedSuperclass
 @Getter
 @Setter
-@EntityListeners(value = {AuditListener.class})
+@EntityListeners(value = {AuditDatesListener.class})
 public abstract class AuditableEntity<T extends Serializable> implements BaseEntity<T> {
     private Instant createdAt;
     private String createdBy;
