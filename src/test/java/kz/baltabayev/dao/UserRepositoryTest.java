@@ -21,7 +21,7 @@ import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
 @TestInstance(PER_CLASS)
-class UserDaoTest {
+class UserRepositoryTest {
 
     private final SessionFactory sessionFactory = HibernateTestUtil.buildSessionFactory();
     private final UserDao userDao = UserDao.getInstance();

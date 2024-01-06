@@ -1,5 +1,6 @@
 package kz.baltabayev.entity;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,6 +26,7 @@ public class PersonalInfo implements Serializable {
 
 //    @Convert(converter = BirthdayConverter.class) // либо указываем при создании Configuration
 //    @Column(name = "birth_date")
+    @NotNull
     private LocalDate birthDate;
 
 }

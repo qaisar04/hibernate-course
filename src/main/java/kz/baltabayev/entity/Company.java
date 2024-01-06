@@ -19,7 +19,7 @@ import java.util.*;
 @Builder
 @Table(name = "company")
 @Audited
-public class Company {
+public class Company implements BaseEntity<Integer> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

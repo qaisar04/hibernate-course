@@ -2,6 +2,8 @@ package kz.baltabayev.entity;
 
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.FetchMode;
@@ -26,6 +28,11 @@ import static kz.baltabayev.util.StringUtils.SPACE;
                 @NamedSubgraph(name = "chats", attributeNodes = @NamedAttributeNode("chat"))
         }
 )
+@NamedEntityGraph(
+        name = "withCompany",
+        attributeNodes = {
+                @NamedAttributeNode("company")}
+)
 @NamedQuery(name = "findUserByUserame", query = "select u from User u " +
                                                 "where u.username = :username " +
                                                 "order by u.username asc")
@@ -45,10 +52,12 @@ public class User implements Comparable<User>, BaseEntity<Long> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Valid
     @AttributeOverride(name = "birthDate", column = @Column(name = "birth_date"))
     private PersonalInfo personalInfo;
 
     @Column(unique = true)
+    @NotNull
     private String username;
 
     @Convert(attributeName = "info", converter = JsonBinaryType.class)
